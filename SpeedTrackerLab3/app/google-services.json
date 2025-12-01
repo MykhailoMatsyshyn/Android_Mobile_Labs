@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "601552485892",
+    "project_id": "speedtrackerlab3",
+    "storage_bucket": "speedtrackerlab3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601552485892:android:480a04fcfb05f6c9fb3f51",
+        "android_client_info": {
+          "package_name": "dev.matsyshyn.speedtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFdYNHD0Vhi4iIQb4cUmn1nQg9KVUcNOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+

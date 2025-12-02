@@ -33,8 +33,7 @@ import kotlin.math.sqrt
 
 class ServerActivity : AppCompatActivity(), SensorEventListener {
 
-    // UUID з методички (Важливо!)
-    // Service UUID: 12345678-1234-5678-1234-56789abcdef0
+
     private val SERVICE_UUID = UUID.fromString("12345678-1234-5678-1234-56789abcdef0")
     // Characteristic UUID: ...f1
     private val CHAR_UUID = UUID.fromString("12345678-1234-5678-1234-56789abcdef1")
@@ -67,7 +66,7 @@ class ServerActivity : AppCompatActivity(), SensorEventListener {
         tvDirection = findViewById(R.id.tvDirection)
         tvClients = findViewById(R.id.tvClientCount)
 
-        // Ініціалізація магнітометра (Сенсор з Лаб 1)
+        // Ініціалізація магнітометра
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         

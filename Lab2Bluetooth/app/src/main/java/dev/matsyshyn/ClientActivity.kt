@@ -61,6 +61,11 @@ class ClientActivity : AppCompatActivity() {
     private lateinit var btnExport: MaterialButton
     private lateinit var btnClear: MaterialButton
     private lateinit var tvChangeRate: TextView
+    private lateinit var cardHistoryExpander: MaterialCardView
+    private lateinit var headerHistoryExpander: View
+    private lateinit var contentHistoryExpander: View
+    private lateinit var ivExpandIcon: TextView
+    private lateinit var llHistoryList: android.widget.LinearLayout
     
     // Список знайдених пристроїв
     private val foundDevices = mutableListOf<String>()
@@ -132,6 +137,16 @@ class ClientActivity : AppCompatActivity() {
         btnExport = findViewById(R.id.btnExport)
         btnClear = findViewById(R.id.btnClear)
         tvChangeRate = findViewById(R.id.tvChangeRate)
+        cardHistoryExpander = findViewById(R.id.cardHistoryExpander)
+        headerHistoryExpander = findViewById(R.id.headerHistoryExpander)
+        contentHistoryExpander = findViewById(R.id.contentHistoryExpander)
+        ivExpandIcon = findViewById(R.id.ivExpandIcon)
+        llHistoryList = findViewById(R.id.llHistoryList)
+        
+        // Налаштування розгортання/згортання
+        headerHistoryExpander.setOnClickListener {
+            toggleHistoryExpander()
+        }
     }
 
     private fun setupChart() {
@@ -310,6 +325,11 @@ class ClientActivity : AppCompatActivity() {
                     updateStatistics()
                     updateChart()
                     
+                    // Оновлюємо список вимірювань, якщо він розгорнутий
+                    if (::contentHistoryExpander.isInitialized && contentHistoryExpander.visibility == View.VISIBLE) {
+                        updateHistoryList()
+                    }
+                    
                 } catch (e: Exception) {
                     tvValue.text = "Error: ${e.message}"
                     Log.e("BLE_JSON", "Помилка парсингу: ${e.message}", e)
@@ -358,6 +378,15 @@ class ClientActivity : AppCompatActivity() {
                     Log.d("BLE_CLIENT", "Історія завантажена: ${measurements.size} вимірювань")
                     updateStatistics()
                     updateChart()
+                    // Оновлюємо список після завантаження (якщо view ініціалізовані)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        if (::contentHistoryExpander.isInitialized) {
+                            // Оновлюємо список, якщо він розгорнутий
+                            if (contentHistoryExpander.visibility == View.VISIBLE) {
+                                updateHistoryList()
+                            }
+                        }
+                    }, 200)
                 }
             }
         } catch (e: Exception) {
@@ -407,6 +436,7 @@ class ClientActivity : AppCompatActivity() {
             tvMax.text = "---"
             tvTrend.text = "---"
             tvHistoryInfo.text = "Історія: 0 / $MAX_HISTORY вимірювань"
+            updateHistoryList()
             return
         }
 
@@ -425,6 +455,11 @@ class ClientActivity : AppCompatActivity() {
         val trend = calculateTrend()
         tvTrend.text = trend.text
         tvTrend.setTextColor(trend.color)
+        
+        // Оновлюємо список вимірювань, якщо він розгорнутий
+        if (::contentHistoryExpander.isInitialized && contentHistoryExpander.visibility == View.VISIBLE) {
+            updateHistoryList()
+        }
     }
 
     private fun calculateTrend(): Trend {
@@ -518,7 +553,223 @@ class ClientActivity : AppCompatActivity() {
         updateStatistics()
         updateChart()
         tvHistoryInfo.text = "Історія: 0 / $MAX_HISTORY вимірювань"
+        updateHistoryList()
         Toast.makeText(this, "Історія очищена", Toast.LENGTH_SHORT).show()
+    }
+    
+    // Перемикання розгортання/згортання списку вимірювань
+    private fun toggleHistoryExpander() {
+        val isExpanded = contentHistoryExpander.visibility == View.VISIBLE
+        
+        Log.d("BLE_CLIENT", "toggleHistoryExpander: isExpanded=$isExpanded, measurements.size=${measurements.size}")
+        
+        if (isExpanded) {
+            // Згортаємо
+            contentHistoryExpander.visibility = View.GONE
+            ivExpandIcon.text = "▼"
+        } else {
+            // Розгортаємо
+            contentHistoryExpander.visibility = View.VISIBLE
+            ivExpandIcon.text = "▲"
+            Log.d("BLE_CLIENT", "Розгортаємо список, measurements.size = ${measurements.size}")
+            
+            // Перевіряємо, чи ініціалізований llHistoryList
+            if (!::llHistoryList.isInitialized) {
+                Log.e("BLE_CLIENT", "llHistoryList НЕ ініціалізований при розгортанні!")
+                Toast.makeText(this, "Помилка: список не ініціалізований", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // Оновлюємо список одразу
+            updateHistoryList()
+            
+            // Показуємо Toast для діагностики
+            Toast.makeText(this, "Вимірювань: ${measurements.size}, Додано елементів: ${llHistoryList.childCount}", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    // Оновлення списку збережених вимірювань
+    private fun updateHistoryList() {
+        try {
+            if (!::llHistoryList.isInitialized) {
+                Log.e("BLE_CLIENT", "llHistoryList не ініціалізований!")
+                return
+            }
+            
+            Log.d("BLE_CLIENT", "=== updateHistoryList START ===")
+            Log.d("BLE_CLIENT", "measurements.size = ${measurements.size}")
+            Log.d("BLE_CLIENT", "llHistoryList visibility = ${llHistoryList.visibility}")
+            Log.d("BLE_CLIENT", "llHistoryList childCount before = ${llHistoryList.childCount}")
+            
+            llHistoryList.removeAllViews()
+            
+            if (measurements.isEmpty()) {
+                val emptyView = TextView(this).apply {
+                    text = "Немає збережених вимірювань"
+                    textSize = 14f
+                    setTextColor(Color.parseColor("#999999"))
+                    setPadding(16, 16, 16, 16)
+                    gravity = android.view.Gravity.CENTER
+                }
+                llHistoryList.addView(emptyView)
+                Log.d("BLE_CLIENT", "Додано повідомлення про порожній список")
+                return
+            }
+            
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+            var itemsAdded = 0
+            var errorsCount = 0
+            
+            // Показуємо вимірювання в зворотному порядку (найновіші зверху)
+            val reversedMeasurements = measurements.reversed()
+            Log.d("BLE_CLIENT", "reversedMeasurements.size = ${reversedMeasurements.size}")
+            
+            reversedMeasurements.forEachIndexed { reversedIndex, measurement ->
+                try {
+                    Log.d("BLE_CLIENT", "Створюю елемент #${reversedIndex + 1}: value=${measurement.value}, direction=${measurement.direction}")
+                    val originalIndex = measurements.size - 1 - reversedIndex
+                    val itemView = createHistoryItemView(measurement, dateFormat, originalIndex)
+                    llHistoryList.addView(itemView)
+                    itemsAdded++
+                    Log.d("BLE_CLIENT", "Елемент #${reversedIndex + 1} додано успішно")
+                    
+                    // Додаємо роздільник між елементами (крім останнього)
+                    if (reversedIndex < reversedMeasurements.size - 1) {
+                        val divider = View(this).apply {
+                            layoutParams = android.widget.LinearLayout.LayoutParams(
+                                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                                1
+                            ).apply {
+                                setMargins(0, 8, 0, 8)
+                            }
+                            setBackgroundColor(Color.parseColor("#E0E0E0"))
+                        }
+                        llHistoryList.addView(divider)
+                    }
+                } catch (e: Exception) {
+                    errorsCount++
+                    Log.e("BLE_CLIENT", "Помилка створення елемента списку #${reversedIndex + 1}: ${e.message}", e)
+                    e.printStackTrace()
+                }
+            }
+            
+            Log.d("BLE_CLIENT", "=== updateHistoryList END ===")
+            Log.d("BLE_CLIENT", "Додано $itemsAdded елементів, помилок: $errorsCount")
+            Log.d("BLE_CLIENT", "llHistoryList childCount after = ${llHistoryList.childCount}")
+            Log.d("BLE_CLIENT", "llHistoryList visibility = ${llHistoryList.visibility}")
+            Log.d("BLE_CLIENT", "contentHistoryExpander visibility = ${contentHistoryExpander.visibility}")
+        } catch (e: Exception) {
+            Log.e("BLE_CLIENT", "КРИТИЧНА ПОМИЛКА в updateHistoryList: ${e.message}", e)
+            e.printStackTrace()
+        }
+    }
+    
+    // Створення view для одного елемента історії
+    private fun createHistoryItemView(measurement: Measurement, dateFormat: SimpleDateFormat, index: Int): View {
+        try {
+            val card = MaterialCardView(this).apply {
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, 8)
+                }
+                radius = 12f
+                cardElevation = 2f
+                setCardBackgroundColor(Color.parseColor("#F5F5F5"))
+            }
+            
+            val container = android.widget.LinearLayout(this).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                setPadding(16, 12, 16, 12)
+            }
+            
+            // Заголовок з номером та датою
+            val headerLayout = android.widget.LinearLayout(this).apply {
+                orientation = android.widget.LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+            }
+            
+            val numberText = TextView(this).apply {
+                text = "#${index + 1}"
+                textSize = 12f
+                setTextColor(Color.parseColor("#666666"))
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+            
+            val dateText = TextView(this).apply {
+                text = dateFormat.format(Date(measurement.timestamp))
+                textSize = 12f
+                setTextColor(Color.parseColor("#999999"))
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    0,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1f
+                ).apply {
+                    marginStart = 12
+                }
+            }
+            
+            headerLayout.addView(numberText)
+            headerLayout.addView(dateText)
+            
+            // Значення та напрямок
+            val valueLayout = android.widget.LinearLayout(this).apply {
+                orientation = android.widget.LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                setPadding(0, 8, 0, 0)
+            }
+            
+            val valueText = TextView(this).apply {
+                text = "%.1f мкТл".format(measurement.value)
+                textSize = 16f
+                setTextColor(when {
+                    measurement.value > 100 -> Color.RED
+                    measurement.value > 50 -> Color.parseColor("#FF9800")
+                    else -> Color.parseColor("#2196F3")
+                })
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+            
+            val directionText = TextView(this).apply {
+                text = "→ ${measurement.direction}"
+                textSize = 14f
+                setTextColor(Color.parseColor("#666666"))
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    0,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1f
+                ).apply {
+                    marginStart = 12
+                }
+            }
+            
+            valueLayout.addView(valueText)
+            valueLayout.addView(directionText)
+            
+            container.addView(headerLayout)
+            container.addView(valueLayout)
+            card.addView(container)
+            
+            return card
+        } catch (e: Exception) {
+            Log.e("BLE_CLIENT", "Помилка в createHistoryItemView: ${e.message}", e)
+            e.printStackTrace()
+            // Повертаємо простий TextView як fallback
+            return TextView(this).apply {
+                text = "Помилка відображення: ${measurement.value} мкТл"
+                textSize = 14f
+                setPadding(16, 16, 16, 16)
+            }
+        }
     }
 
     private fun hasPermissions(): Boolean {

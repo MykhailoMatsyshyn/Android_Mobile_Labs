@@ -18,11 +18,9 @@ class MainActivity : AppCompatActivity() {
         val cardClient = findViewById<MaterialCardView>(R.id.cardClient)
         val cardServer = findViewById<MaterialCardView>(R.id.cardServer)
 
-        // Анімація появи карток
         animateCard(cardClient, 0)
         animateCard(cardServer, 150)
 
-        // Обробники кліків по картках
         cardClient.setOnClickListener {
             animateClick(cardClient) {
                 startActivity(Intent(this, ClientActivity::class.java))

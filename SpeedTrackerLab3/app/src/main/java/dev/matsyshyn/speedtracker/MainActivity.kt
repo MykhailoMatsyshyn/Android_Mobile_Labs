@@ -46,15 +46,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.sqrt
 
-// Data Class для відправки в Firebase
-/*data class TrackingData(
-    val timestamp: String,
-    val speedKmh: Float,
-    val accelMagnitude: Float,
-    val latitude: Double,
-    val longitude: Double
-)*/
-
 class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
     private lateinit var firebaseDatabase: DatabaseReference
@@ -126,13 +117,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         spinnerInterval = findViewById<Spinner>(R.id.spinnerInterval)
         spinnerCriticalSpeed = findViewById<Spinner>(R.id.spinnerCriticalSpeed)
 
-        // --- ДОДАНО: Кнопка переходу на Історію ---
         val btnHistory = findViewById<Button>(R.id.btnOpenHistory)
         btnHistory.setOnClickListener {
             val intent = android.content.Intent(this, HistoryActivity::class.java)
             startActivity(intent)
         }
-        // ------------------------------------------
 
         // Ініціалізація UI для офлайн-даних
         offlineCardView = findViewById<androidx.cardview.widget.CardView>(R.id.offlineCardView)
@@ -268,7 +257,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
     
     private fun setupCriticalSpeedSpinner() {
         val speeds = arrayOf(
-            "10 км/год (тест)",
+            "5 км/год",
+            "10 км/год",
             "50 км/год",
             "60 км/год",
             "70 км/год",
@@ -279,7 +269,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
             "130 км/год"
         )
         
-        val speedValues = arrayOf(10f, 50f, 60f, 70f, 80f, 90f, 100f, 120f, 130f)
+        val speedValues = arrayOf(5f, 10f, 50f, 60f, 70f, 80f, 90f, 100f, 120f, 130f)
         
         // Кастомний адаптер з правильними кольорами для dropdown
         val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, speeds) {
@@ -348,7 +338,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
 
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, this)
-            // ДОДАЙ ЦЕЙ РЯДОК для роботи в приміщенні:
+
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, this)
         } catch (e: Exception) {
             e.printStackTrace()

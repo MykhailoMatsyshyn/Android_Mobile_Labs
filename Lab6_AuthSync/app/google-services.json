@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "601552485892",
+    "firebase_url": "https://speedtrackerlab3-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "speedtrackerlab3",
+    "storage_bucket": "speedtrackerlab3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601552485892:android:8e8ded43a7578980fb3f51",
+        "android_client_info": {
+          "package_name": "dev.matsyshyn.lab4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFdYNHD0Vhi4iIQb4cUmn1nQg9KVUcNOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601552485892:android:480a04fcfb05f6c9fb3f51",
+        "android_client_info": {
+          "package_name": "dev.matsyshyn.speedtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFdYNHD0Vhi4iIQb4cUmn1nQg9KVUcNOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

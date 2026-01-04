@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F5F5F5"
+    tools:context=".CollectorActivity">
+
+    <!-- Status Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🔍 Scanning..."
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#2196F3" />
+
+                <Button
+                    android:id="@+id/btnRescan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔄"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:backgroundTint="#2196F3" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No data received"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textColor="#666"
+                android:layout_marginTop="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Sensor Values:"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#333" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="#E8F5E9"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Accelerometer"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50" />
+
+                        <TextView
+                            android:id="@+id/tvAccel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ax: 0.00\nay: 0.00\naz: 0.00"
+                            android:textSize="9sp"
+                            android:fontFamily="monospace"
+                            android:textColor="#2E7D32" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="#E3F2FD"
+                        android:padding="8dp"
+                        android:layout_marginStart="4dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gyroscope"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:textColor="#2196F3" />
+
+                        <TextView
+                            android:id="@+id/tvGyro"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="gx: 0.00\ngy: 0.00\ngz: 0.00"
+                            android:textSize="9sp"
+                            android:fontFamily="monospace"
+                            android:textColor="#1565C0" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Selected Class Indicator -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardSelectedClass"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#E3F2FD"
+        app:layout_constraintTop_toBottomOf="@id/cardStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Selected Class:"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSelectedClass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Спокій (4)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#1976D2"
+                android:padding="8dp"
+                android:background="#BBDEFB"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Class Selection Buttons -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardClasses"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/cardSelectedClass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Exercise Class:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="3"
+                android:alignmentMode="alignMargins"
+                android:useDefaultMargins="false"
+                android:columnOrderPreserved="false">
+
+                <Button
+                    android:id="@+id/btnClass0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="0: Згинання"
+                    android:textSize="12sp"
+                    android:padding="12dp"
+                    android:backgroundTint="#4CAF50" />
+
+                <Button
+                    android:id="@+id/btnClass1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="1: Підняття"
+                    android:textSize="12sp"
+                    android:padding="12dp"
+                    android:backgroundTint="#2196F3" />
+
+                <Button
+                    android:id="@+id/btnClass2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="2: Розведення"
+                    android:textSize="12sp"
+                    android:padding="12dp"
+                    android:backgroundTint="#FF9800" />
+
+                <Button
+                    android:id="@+id/btnClass3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="3: Обертання"
+                    android:textSize="12sp"
+                    android:padding="12dp"
+                    android:backgroundTint="#9C27B0" />
+
+                <Button
+                    android:id="@+id/btnClass4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnSpan="2"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    android:text="4: Спокій"
+                    android:textSize="12sp"
+                    android:padding="12dp"
+                    android:backgroundTint="#607D8B" />
+            </GridLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Recording Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardRecording"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/cardClasses"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvRecordCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Samples: 0"
+                android:textSize="14sp"
+                android:textColor="#666"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/btnRecord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▶ START Recording"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="20dp"
+                android:backgroundTint="#4CAF50"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="💾 Save CSV File"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:backgroundTint="#FF5722"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/cardRecording"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

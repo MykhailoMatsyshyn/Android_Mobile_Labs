@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/monitoringFragment"
+        android:icon="@drawable/ic_monitoring"
+        android:title="Моніторинг" />
+    <item
+        android:id="@+id/deviceControlFragment"
+        android:icon="@drawable/ic_devices"
+        android:title="Пристрої" />
+    <item
+        android:id="@+id/rulesFragment"
+        android:icon="@drawable/ic_rules"
+        android:title="Правила" />
+</menu>
+

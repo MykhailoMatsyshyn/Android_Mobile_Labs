@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.monitoring.MonitoringFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Connection Status & Control -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/connection_status"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/connection_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/disconnected"
+                            android:textSize="14sp"
+                            android:textColor="#FF5722" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_start_generation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/start_generation"
+                            style="@style/Widget.Material3.Button" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_stop_generation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/stop_generation"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_sync"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/sync"
+                        style="@style/Widget.Material3.Button.TextButton" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Current Values - Visual Cards -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Поточні значення"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Parking Visualization -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Парковка"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tv_current_free_spots"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Вільні місця: 0/100"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="8dp" />
+
+                            <!-- Parking Grid -->
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_parking"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+                                tools:listitem="@layout/item_parking_spot"
+                                tools:itemCount="100" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Temperature Gauge -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:gravity="center_vertical">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Температура"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_current_temperature"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0°C"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <dev.matsyshyn.smartparkingsystem.ui.monitoring.ThermometerView
+                                android:id="@+id/thermometer_view"
+                                android:layout_width="80dp"
+                                android:layout_height="120dp" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Air Quality -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Якість повітря"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="8dp" />
+
+                            <!-- CO Level -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginBottom="12dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="4dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="CO"
+                                        android:textSize="14sp" />
+
+                                    <TextView
+                                        android:id="@+id/tv_current_co"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0 ppm"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+
+                                <ProgressBar
+                                    android:id="@+id/progress_co"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="8dp"
+                                    android:max="500"
+                                    android:progressTint="#FF5722" />
+
+                            </LinearLayout>
+
+                            <!-- NOx Level -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="4dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="NOx"
+                                        android:textSize="14sp" />
+
+                                    <TextView
+                                        android:id="@+id/tv_current_nox"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0 ppm"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+
+                                <ProgressBar
+                                    android:id="@+id/progress_nox"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="8dp"
+                                    android:max="500"
+                                    android:progressTint="#9C27B0" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sensor Selector -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Вибір датчика"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group_sensors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:checkedChip="@id/chip_free_spots">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_free_spots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Вільні місця"
+                            android:checked="true"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_co"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CO"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_nox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NOx"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Температура"
+                            android:checkable="true" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Time Range Selector -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Часовий проміжок"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:checkedChip="@id/chip_1h">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_5m"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5 хв"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_30m"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30 хв"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1h"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 год"
+                            android:checked="true"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_6h"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="6 год"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_24h"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="24 год"
+                            android:checkable="true" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_week"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Тиждень"
+                            android:checkable="true" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Chart -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Графік"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_fullscreen_chart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Повний екран"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:padding="16dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Statistics -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/statistics"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Total Records -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Всього записів"
+                            android:textSize="16sp"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/tv_total_records"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- Вільні місця -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Вільні місця"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#2196F3"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Середнє"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_avg_free_spots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Медіана"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_median_free_spots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Тренд"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_trend_free_spots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- CO -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CO"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#FF5722"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Середнє"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_avg_co"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Медіана"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_median_co"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Тренд"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_trend_co"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- NOx -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NOx"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#9C27B0"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Середнє"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_avg_nox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Медіана"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_median_nox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Тренд"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_trend_nox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <!-- Температура -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Температура"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#4CAF50"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Середнє"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_avg_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Медіана"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_median_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Тренд"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/tv_trend_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Data List (Expandable) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/header_data_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Список даних"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/icon_expand_data_list"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            android:contentDescription="Розгорнути" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_sensor_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:visibility="gone"
+                        android:nestedScrollingEnabled="true" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/monitoringFragment">
+
+    <fragment
+        android:id="@+id/monitoringFragment"
+        android:name="dev.matsyshyn.smartparkingsystem.ui.monitoring.MonitoringFragment"
+        android:label="@string/monitoring" />
+
+    <fragment
+        android:id="@+id/deviceControlFragment"
+        android:name="dev.matsyshyn.smartparkingsystem.ui.devicecontrol.DeviceControlFragment"
+        android:label="@string/device_control" />
+
+    <fragment
+        android:id="@+id/rulesFragment"
+        android:name="dev.matsyshyn.smartparkingsystem.ui.rules.RulesFragment"
+        android:label="@string/automation_rules" />
+
+</navigation>
+
+
+
+
+
